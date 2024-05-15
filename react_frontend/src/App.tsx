@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
 
-const socket = io('ws://localhost:8000'); // Replace with your Django Channels WebSocket URL
+const socket = new WebSocket('ws://localhost:8000/ws/chat/');
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [inputMessage, setInputMessage] = useState<string>('');
 
   useEffect(() => {
-    socket.on('connect', () => {
+    socket.onopen = () => {
       console.log('Connected to Django Channels server');
-    });
+    };
 
-    socket.on('chat_message', (event: any) => {
-      const message = event.message;
+    socket.onmessage = (event) => {
+      const message = event.data;
       setMessages((prevMessages) => [...prevMessages, message]);
-    });
+    };
 
     return () => {
-      socket.disconnect();
+      socket.close();
     };
   }, []);
 
   const sendMessage = () => {
-    socket.emit('chat_message', { message: inputMessage });
+    socket.send(inputMessage);
     setInputMessage('');
   };
 
