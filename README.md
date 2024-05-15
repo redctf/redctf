@@ -28,6 +28,7 @@
 * First blood - more points / tracking
 * Notes on challenge modal (first blood, latest solves, etc)
 * Linting
+* More intuitive challenge creation / automated image building
 
 ## Stretch Goals
 
